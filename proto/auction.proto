@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package auction;
+
+option go_package = "./gen/proto";
+
+// Сообщение для представления лота
+message Lot {
+  string id = 1;              // Уникальный идентификатор
+  string name = 2;            // Название лота
+  string description = 3;     // Описание
+  double start_price = 4;     // Начальная цена
+  double current_price = 5;   // Текущая цена
+  string current_winner = 6;  // ID текущего победителя
+  string status = 7;          // Статус: ACTIVE, COMPLETED, CANCELLED
+  int64 end_time_unix = 8;    // Время окончания аукциона (Unix timestamp)
+}
+
+// Сообщение для представления ставки
+message Bid {
+  string lot_id = 1;
+  string user_id = 2;         // Идентификатор пользователя, сделавшего ставку
+  double amount = 3;
+  int64 timestamp = 4;
+}
+
+// Сообщения для CRUD операций с лотами
+message CreateLotRequest {
+  string name = 1;
+  string description = 2;
+  double start_price = 3;
+  int64 duration_minute = 4; // Длительность аукциона в секундах
+}
+message CreateLotResponse {
+  Lot lot = 1;
+}
+
+message GetLotRequest {
+  string lot_id = 1;
+}
+message GetLotResponse {
+  Lot lot = 1;
+}
+
+// Сообщение для размещения ставки
+message PlaceBidRequest {
+  string lot_id = 1;
+  string user_id = 2;
+  double amount = 3;
+}
+message PlaceBidResponse {
+  bool success = 1;           // Успешна ли ставка
+  string message = 2;         // Сообщение (e.g., "Ставка принята", "Ставка слишком мала")
+  Lot updated_lot = 3;        // Актуальное состояние лота
+}
+
+// Сообщение для подписки на обновления лота
+message SubscribeToLotRequest {
+  string lot_id = 1;
+}
+
+message SubscribeToLotResponse {
+  Lot lot = 1;
+}
+
+// Сервис
+service AuctionService {
+  // Unary RPC
+  rpc CreateLot (CreateLotRequest) returns (CreateLotResponse);
+  rpc GetLot (GetLotRequest) returns (GetLotResponse);
+  rpc PlaceBid (PlaceBidRequest) returns (PlaceBidResponse); // Важная CRUD-операция
+
+  // Server-Side Streaming RPC
+  // Клиент подписывается на один лот и получает поток обновлений (новые ставки, изменение статуса)
+  rpc SubscribeToLot (SubscribeToLotRequest) returns (stream SubscribeToLotResponse);
+}
