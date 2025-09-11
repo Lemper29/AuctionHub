@@ -2,7 +2,9 @@ name: Auction Service CI
 
 on:
   push:
+    branches: [ main, dev ]
   pull_request:
+    branches: [ main, dev ]
 
 jobs:
   test:
@@ -32,9 +34,11 @@ jobs:
       with:
         go-version: '1.24'
         cache: true
+        cache-dependency-path: auction-service/go.sum
 
     - name: Install dependencies
       run: go mod download
+      working-directory: ./auction-service 
 
     - name: Run tests
       env:
@@ -44,6 +48,7 @@ jobs:
         DB_PASSWORD: 0000
         DB_NAME: postgres
       run: go test -v ./...
+      working-directory: ./auction-service
 
   build:
     runs-on: ubuntu-latest
@@ -58,20 +63,24 @@ jobs:
       with:
         go-version: '1.24'
         cache: true
+        cache-dependency-path: auction-service/go.sum
 
     - name: Build server
-      run: go build -o auction-server ./auction-service/cmd/server/main.go
+      run: go build -o auction-server ./cmd/server/main.go
+      working-directory: ./auction-service
 
     - name: Build client
-      run: go build -o auction-client ./auction-service/cmd/client/main.go
+      run: go build -o auction-client ./cmd/client/main.go
+      working-directory: ./auction-service
 
     - name: List binaries
       run: ls -la auction-server auction-client
+      working-directory: ./auction-service
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: auction-binaries
         path: |
-          auction-server
-          auction-client
+          auction-service/auction-server
+          auction-service/auction-client
