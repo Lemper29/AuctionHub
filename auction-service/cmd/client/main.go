@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	pb "github/auction/auction-service/gen/proto"
+	pb "github/auction/gen/proto"
 	"io"
 	"log"
 

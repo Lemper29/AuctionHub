@@ -2,7 +2,7 @@ package storage
 
 import (
 	"context"
-	"github/auction/auction-service/pkg/models"
+	"github/auction/pkg/models"
 )
 
 type Storage interface {

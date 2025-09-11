@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github/auction/auction-service/internal/config"
-	"github/auction/auction-service/internal/server"
-	"github/auction/auction-service/internal/storage/db"
+	"github/auction/internal/config"
+	"github/auction/internal/server"
+	"github/auction/internal/storage/db"
 	"log"
 
 	"gorm.io/driver/postgres"
