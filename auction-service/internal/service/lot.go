@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	pb "github/auction/gen/proto"
-	"github/auction/internal/storage"
-	"github/auction/pkg/models"
+	"github/auctiongithub/auction-service/internal/storage"
+	"github/auctiongithub/auction-service/pkg/models"
+	pb "github/auctiongithub/proto/gen/proto"
 
 	"log"
 	"time"
