@@ -1,0 +1,86 @@
+name: Auction Service CI
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: 0000
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+        cache: true
+        cache-dependency-path: auction-service/go.sum
+
+    - name: Install dependencies
+      run: go mod download
+      working-directory: ./auction-service 
+
+    - name: Run tests
+      env:
+        DB_HOST: localhost
+        DB_PORT: 5432
+        DB_USER: postgres
+        DB_PASSWORD: 0000
+        DB_NAME: postgres
+      run: go test -v ./...
+      working-directory: ./auction-service
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+        cache: true
+        cache-dependency-path: auction-service/go.sum
+
+    - name: Build server
+      run: go build -o auction-server ./cmd/server/main.go
+      working-directory: ./auction-service
+
+    - name: Build client
+      run: go build -o auction-client ./cmd/client/main.go
+      working-directory: ./auction-service
+
+    - name: List binaries
+      run: ls -la auction-server auction-client
+      working-directory: ./auction-service
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: auction-binaries
+        path: |
+          auction-service/auction-server
+          auction-service/auction-client
