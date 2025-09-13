@@ -2,8 +2,8 @@ package db
 
 import (
 	"context"
-	"github/auction/internal/storage"
-	"github/auction/pkg/models"
+	"github/auctiongithub/auction-service/internal/storage"
+	"github/auctiongithub/auction-service/pkg/models"
 	"time"
 
 	"github.com/google/uuid"

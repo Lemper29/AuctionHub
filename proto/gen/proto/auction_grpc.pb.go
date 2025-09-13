@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.5.1
 // - protoc             v6.31.1
-// source: proto/auction.proto
+// source: auction.proto
 
 package proto
 
@@ -245,5 +245,5 @@ var AuctionService_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "proto/auction.proto",
+	Metadata: "auction.proto",
 }

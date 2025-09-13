@@ -2,9 +2,9 @@ package server
 
 import (
 	"context"
-	pb "github/auction/gen/proto"
-	"github/auction/internal/service"
-	"github/auction/internal/storage"
+	"github/auctiongithub/auction-service/internal/service"
+	"github/auctiongithub/auction-service/internal/storage"
+	pb "github/auctiongithub/proto/gen/proto"
 	"log"
 	"net"
 
