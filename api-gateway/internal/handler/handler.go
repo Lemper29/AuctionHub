@@ -4,10 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github/auctiongithub/api-gateway/internal/utils"
-	"github/auctiongithub/api-gateway/pkg/models"
-	pb "github/auctiongithub/proto/gen/proto"
-
+	"github.com/Lemper29/api-gateway/internal/utils"
+	"github.com/Lemper29/api-gateway/pkg/models"
+	pb "github.com/Lemper29/auction/gen/auction"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

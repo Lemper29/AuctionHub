@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package auction;
+
+option go_package = "github.com/auctiongithub/gen";
+
+import "google/api/annotations.proto";
+
+message Lot {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double start_price = 4;
+  double current_price = 5;
+  string current_winner = 6;
+  string status = 7;
+  int64 end_time_unix = 8;
+}
+
+// Сообщения для CRUD операций с лотами
+message CreateLotRequest {
+  string name = 1;
+  string description = 2;
+  double start_price = 3;
+  int64 duration_minute = 4;
+}
+
+message CreateLotResponse {
+  Lot lot = 1;
+}
+
+message GetLotRequest {
+  string lot_id = 1;
+}
+
+message GetLotResponse {
+  Lot lot = 1;
+}
+
+// Сообщение для размещения ставки
+message PlaceBidRequest {
+  string lot_id = 1;
+  string user_id = 2;
+  double amount = 3;
+}
+
+message PlaceBidResponse {
+  bool success = 1;
+  string message = 2;
+  Lot updated_lot = 3;
+}
+
+// Сообщения остаются без изменений
+message SubscribeToLotRequest {
+  string lot_id = 1;
+}
+
+message SubscribeToLotResponse {
+  Lot lot = 1;
+}
+
+// Сервис
+service AuctionService {
+  rpc CreateLot (CreateLotRequest) returns (CreateLotResponse) {
+    // Добавьте аннотации для HTTP здесь
+    option (google.api.http) = {
+      post: "/v1/lots"
+      body: "*"
+    };
+  }
+  
+  rpc GetLot (GetLotRequest) returns (GetLotResponse) {
+    option (google.api.http) = {
+      get: "/v1/lots/{lot_id}"
+    };
+  }
+  
+  rpc PlaceBid (PlaceBidRequest) returns (PlaceBidResponse) {
+    option (google.api.http) = {
+      post: "/v1/lots/{lot_id}/bids"
+      body: "*"
+    };
+  }
+
+  rpc SubscribeToLot (SubscribeToLotRequest) returns (stream SubscribeToLotResponse) {
+    option (google.api.http) = {
+      get: "/v1/lots/{lot_id}/subscribe"
+  };
+  }
+}

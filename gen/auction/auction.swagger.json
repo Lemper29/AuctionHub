@@ -1,0 +1,292 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "auction/auction.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "AuctionService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/lots": {
+      "post": {
+        "operationId": "AuctionService_CreateLot",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/auctionCreateLotResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/auctionCreateLotRequest"
+            }
+          }
+        ],
+        "tags": [
+          "AuctionService"
+        ]
+      }
+    },
+    "/v1/lots/{lotId}": {
+      "get": {
+        "operationId": "AuctionService_GetLot",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/auctionGetLotResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuctionService"
+        ]
+      }
+    },
+    "/v1/lots/{lotId}/bids": {
+      "post": {
+        "operationId": "AuctionService_PlaceBid",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/auctionPlaceBidResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuctionServicePlaceBidBody"
+            }
+          }
+        ],
+        "tags": [
+          "AuctionService"
+        ]
+      }
+    },
+    "/v1/lots/{lotId}/subscribe": {
+      "get": {
+        "operationId": "AuctionService_SubscribeToLot",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/auctionSubscribeToLotResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of auctionSubscribeToLotResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "lotId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AuctionService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AuctionServicePlaceBidBody": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "title": "Сообщение для размещения ставки"
+    },
+    "auctionCreateLotRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "startPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "durationMinute": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "title": "Сообщения для CRUD операций с лотами"
+    },
+    "auctionCreateLotResponse": {
+      "type": "object",
+      "properties": {
+        "lot": {
+          "$ref": "#/definitions/auctionLot"
+        }
+      }
+    },
+    "auctionGetLotResponse": {
+      "type": "object",
+      "properties": {
+        "lot": {
+          "$ref": "#/definitions/auctionLot"
+        }
+      }
+    },
+    "auctionLot": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "startPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "currentPrice": {
+          "type": "number",
+          "format": "double"
+        },
+        "currentWinner": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "endTimeUnix": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "auctionPlaceBidResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "message": {
+          "type": "string"
+        },
+        "updatedLot": {
+          "$ref": "#/definitions/auctionLot"
+        }
+      }
+    },
+    "auctionSubscribeToLotResponse": {
+      "type": "object",
+      "properties": {
+        "lot": {
+          "$ref": "#/definitions/auctionLot"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

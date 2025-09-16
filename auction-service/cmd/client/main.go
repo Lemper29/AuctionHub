@@ -3,9 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
-	pb "github/auctiongithub/proto/gen/proto"
 	"io"
 	"log"
+
+	pb "github.com/Lemper29/auction/gen/auction"
 
 	"google.golang.org/grpc"
 )

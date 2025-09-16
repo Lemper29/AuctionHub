@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github/auctiongithub/api-gateway/internal/handler"
 	"log"
 	"net/http"
 
+	"github.com/Lemper29/api-gateway/internal/handler"
 	"github.com/gorilla/mux"
 )
 

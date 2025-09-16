@@ -2,10 +2,10 @@ package db
 
 import (
 	"context"
-	"github/auctiongithub/auction-service/internal/storage"
-	"github/auctiongithub/auction-service/pkg/models"
 	"time"
 
+	"github.com/Lemper29/auction-service/internal/storage"
+	"github.com/Lemper29/auction-service/pkg/models"
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

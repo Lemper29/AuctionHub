@@ -2,11 +2,12 @@ package server
 
 import (
 	"context"
-	"github/auctiongithub/auction-service/internal/service"
-	"github/auctiongithub/auction-service/internal/storage"
-	pb "github/auctiongithub/proto/gen/proto"
 	"log"
 	"net"
+
+	"github.com/Lemper29/auction-service/internal/service"
+	"github.com/Lemper29/auction-service/internal/storage"
+	pb "github.com/Lemper29/auction/gen/auction"
 
 	"google.golang.org/grpc"
 )
