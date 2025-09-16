@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github/auctiongithub/auction-service/internal/config"
-	"github/auctiongithub/auction-service/internal/server"
-	"github/auctiongithub/auction-service/internal/storage/db"
 	"log"
 
+	"github.com/Lemper29/auction-service/internal/config"
+	"github.com/Lemper29/auction-service/internal/server"
+	"github.com/Lemper29/auction-service/internal/storage/db"
 	"gorm.io/driver/postgres"
 )
 

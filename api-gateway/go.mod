@@ -1,19 +1,21 @@
-module github/auctiongithub/api-gateway
+module github.com/Lemper29/api-gateway
 
 go 1.24.3
 
-replace github/auctiongithub/proto => ../proto
-
 require (
-	github.com/gorilla/mux v1.8.0
-	github/auctiongithub/proto v0.0.0-00010101000000-000000000000
+	github.com/Lemper29/auction v0.0.0
+	github.com/gorilla/mux v1.8.1
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 // indirect; ← ДОБАВИТЬ
+	google.golang.org/genproto/googleapis/api v0.0.0-20250908214217-97024824d090 // indirect; ← ДОБАВИТЬ
 	google.golang.org/grpc v1.75.1
 )
 
+replace github.com/Lemper29/auction => ../
+
 require (
-	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
-	golang.org/x/text v0.26.0 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250707201910-8d1bb00bc6a7 // indirect
+	golang.org/x/net v0.44.0 // indirect
+	golang.org/x/sys v0.36.0 // indirect
+	golang.org/x/text v0.29.0 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250826171959-ef028d996bc1 // indirect
 	google.golang.org/protobuf v1.36.9 // indirect
 )

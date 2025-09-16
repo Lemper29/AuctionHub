@@ -2,12 +2,12 @@ package service
 
 import (
 	"context"
-	"github/auctiongithub/auction-service/internal/storage"
-	"github/auctiongithub/auction-service/pkg/models"
-	pb "github/auctiongithub/proto/gen/proto"
-
 	"log"
 	"time"
+
+	"github.com/Lemper29/auction-service/internal/storage"
+	"github.com/Lemper29/auction-service/pkg/models"
+	pb "github.com/Lemper29/auction/gen/auction"
 )
 
 type LotService struct {
