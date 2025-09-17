@@ -1,3 +1,5 @@
+include .env
+
 PROTO_DIR=protos
 GEN_DIR=gen
 
@@ -41,10 +43,6 @@ run-server:
 run-gateway:
 	cd api-gateway && go run ./cmd/gateway
 
-.PHONY: run-api
-run-api:
-	cd api-gateway && go run ./cmd/main
-
 .PHONY: migrate-up
 migrate-up:
 	migrate -database "postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" -path ./auction-service/internal/storage/migrations up
@@ -76,7 +74,6 @@ help:
 	@echo "  make gen-openapi  - Generate OpenAPI documentation"
 	@echo "  make run-server   - Run auction service (gRPC server)"
 	@echo "  make run-gateway  - Run API Gateway (gRPC-Gateway)"
-	@echo "  make run-api      - Run custom API Gateway"
 	@echo "  make migrate-up   - Run database migrations"
 	@echo "  make migrate-down - Rollback database migrations"
 	@echo "  make test         - Run tests"
