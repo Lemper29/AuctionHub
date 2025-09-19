@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"context"
+	"io"
 	"log"
 	"net/http"
 
@@ -8,6 +10,7 @@ import (
 	"github.com/Lemper29/api-gateway/pkg/models"
 	pb "github.com/Lemper29/auction/gen/auction"
 	"github.com/gorilla/mux"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -17,7 +20,6 @@ type Handler struct {
 }
 
 func NewHandler() *Handler {
-	// Подключаемся к auction-service
 	conn, err := grpc.Dial("localhost:8080",
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
@@ -29,10 +31,11 @@ func NewHandler() *Handler {
 	}
 }
 
-func (h *Handler) RegisterRoutes(router *mux.Router) {
-	router.HandleFunc("/create", h.CreateLot).Methods("POST")
-	router.HandleFunc("/{id}", h.GetLot).Methods("GET")
-	router.HandleFunc("/{id}/bids", h.PlaceBid).Methods("POST")
+func (h *Handler) RegisterRoutes(ctx context.Context, mux *runtime.ServeMux, opts []grpc.DialOption) {
+	err := pb.RegisterAuctionServiceHandlerFromEndpoint(ctx, mux, "localhost:8080", opts)
+	if err != nil {
+		log.Fatalf("Failed to register gRPC gateway: %v", err)
+	}
 }
 
 func (h *Handler) CreateLot(w http.ResponseWriter, r *http.Request) {
@@ -46,8 +49,8 @@ func (h *Handler) CreateLot(w http.ResponseWriter, r *http.Request) {
 	grpcReq := &pb.CreateLotRequest{
 		Name:           payload.Name,
 		Description:    payload.Description,
-		StartPrice:     payload.Start_price,
-		DurationMinute: payload.Duration_minute,
+		StartPrice:     payload.StartPrice,
+		DurationMinute: payload.DurationMinute,
 	}
 
 	res, err := h.auctionClient.CreateLot(r.Context(), grpcReq)
@@ -61,7 +64,7 @@ func (h *Handler) CreateLot(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) GetLot(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id := vars["id"]
+	id := vars["lot_id"]
 
 	grpcReq := &pb.GetLotRequest{
 		LotId: id,
@@ -78,7 +81,7 @@ func (h *Handler) GetLot(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) PlaceBid(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	id := vars["id"]
+	id := vars["lot_id"]
 
 	var payload models.PlaceBidRequest
 	if err := utils.ParseJSON(r, &payload); err != nil {
@@ -99,4 +102,30 @@ func (h *Handler) PlaceBid(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.WriteJSON(w, http.StatusOK, res)
+}
+
+func (h *Handler) SubscribeToLot(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["lot_id"]
+
+	grpcReq := &pb.SubscribeToLotRequest{
+		LotId: id,
+	}
+
+	stream, err := h.auctionClient.SubscribeToLot(r.Context(), grpcReq)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+	}
+
+	for {
+		subscribeToLot, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("error while receiving todo: %v", err)
+		}
+
+		utils.WriteJSON(w, http.StatusOK, subscribeToLot)
+	}
 }

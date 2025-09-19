@@ -1,24 +1,25 @@
-CREATE TABLE lots (
+-- Таблица lots
+CREATE TABLE IF NOT EXISTS lots (
     id VARCHAR(255) PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     description TEXT,
-    start_price DECIMAL(15, 2) NOT NULL,
-    current_price DECIMAL(15, 2) NOT NULL,
+    start_price DOUBLE PRECISION,
+    current_price DOUBLE PRECISION,
     current_winner VARCHAR(255),
-    status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
-    end_time_unix BIGINT NOT NULL,
+    status VARCHAR(50),
+    end_time_unix BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE bids (
+-- Таблица bids
+CREATE TABLE IF NOT EXISTS bids (
     id VARCHAR(255) PRIMARY KEY,
-    lot_id VARCHAR(255) NOT NULL,
-    user_id VARCHAR(255) NOT NULL,
-    amount DECIMAL(15, 2) NOT NULL,
-    timestamp_unix BIGINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (lot_id) REFERENCES lots(id) ON DELETE CASCADE
+    lot_id VARCHAR(255),
+    user_id VARCHAR(255),
+    amount DOUBLE PRECISION,
+    timestamp_unix BIGINT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_lots_status ON lots(status);

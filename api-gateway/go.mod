@@ -5,8 +5,8 @@ go 1.24.3
 require (
 	github.com/Lemper29/auction v0.0.0
 	github.com/gorilla/mux v1.8.1
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 // indirect; ← ДОБАВИТЬ
-	google.golang.org/genproto/googleapis/api v0.0.0-20250908214217-97024824d090 // indirect; ← ДОБАВИТЬ
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.2 
+	google.golang.org/genproto/googleapis/api v0.0.0-20250908214217-97024824d090
 	google.golang.org/grpc v1.75.1
 )
 
