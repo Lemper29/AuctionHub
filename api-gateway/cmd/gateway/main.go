@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Lemper29/api-gateway/internal/config"
 	pb "github.com/Lemper29/auction/gen/auction"
 	"github.com/gorilla/mux"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -19,13 +20,13 @@ func main() {
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
 	gwMux := runtime.NewServeMux()
-	err := pb.RegisterAuctionServiceHandlerFromEndpoint(ctx, gwMux, "localhost:8080", opts)
+	err := pb.RegisterAuctionServiceHandlerFromEndpoint(ctx, gwMux, config.Envs.AddressAuctionService, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC gateway: %v", err)
 	}
 
 	router.PathPrefix("/").Handler(gwMux)
 
-	log.Println("Starting server on :8081")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	log.Println("Starting server on :" + config.Envs.PortApiGatewayService)
+	log.Fatal(http.ListenAndServe(":"+config.Envs.PortApiGatewayService, router))
 }

@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Lemper29/api-gateway/internal/config"
 	"github.com/Lemper29/api-gateway/internal/utils"
 	"github.com/Lemper29/api-gateway/pkg/models"
 	pb "github.com/Lemper29/auction/gen/auction"
@@ -20,7 +21,7 @@ type Handler struct {
 }
 
 func NewHandler() *Handler {
-	conn, err := grpc.Dial("localhost:8080",
+	conn, err := grpc.Dial(config.Envs.AddressAuctionService,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to connect to auction service: %v", err)
@@ -32,7 +33,7 @@ func NewHandler() *Handler {
 }
 
 func (h *Handler) RegisterRoutes(ctx context.Context, mux *runtime.ServeMux, opts []grpc.DialOption) {
-	err := pb.RegisterAuctionServiceHandlerFromEndpoint(ctx, mux, "localhost:8080", opts)
+	err := pb.RegisterAuctionServiceHandlerFromEndpoint(ctx, mux, config.Envs.AddressAuctionService, opts)
 	if err != nil {
 		log.Fatalf("Failed to register gRPC gateway: %v", err)
 	}
