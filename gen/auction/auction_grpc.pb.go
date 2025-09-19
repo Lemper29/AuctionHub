@@ -4,7 +4,7 @@
 // - protoc             v6.32.0
 // source: auction/auction.proto
 
-package gen
+package auction
 
 import (
 	context "context"

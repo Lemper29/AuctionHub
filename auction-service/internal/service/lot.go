@@ -22,10 +22,10 @@ func NewLotService(repo storage.Storage) *LotService {
 
 func (l *LotService) CreateLot(ctx context.Context, createLot *pb.CreateLotRequest) (*pb.CreateLotResponse, error) {
 	lot := &models.CreateLotRequest{
-		Name:            createLot.Name,
-		Description:     createLot.Description,
-		Start_price:     createLot.StartPrice,
-		Duration_minute: createLot.DurationMinute,
+		Name:           createLot.Name,
+		Description:    createLot.Description,
+		StartPrice:     createLot.StartPrice,
+		DurationMinute: createLot.DurationMinute,
 	}
 
 	createdLot, err := l.repo.CreateLot(ctx, lot)
@@ -109,16 +109,19 @@ func (l *LotService) SubscribeToLot(req *pb.SubscribeToLotRequest, stream pb.Auc
 	}
 }
 
-// Вспомогательная функция для конвертации
 func convertToPbLot(lot *models.Lot) *pb.Lot {
+	if lot == nil {
+		return &pb.Lot{}
+	}
+
 	return &pb.Lot{
 		Id:            lot.Id,
 		Name:          lot.Name,
 		Description:   lot.Description,
-		StartPrice:    lot.Start_price,
-		CurrentPrice:  lot.Current_price,
-		CurrentWinner: lot.Current_winner,
+		StartPrice:    lot.StartPrice,
+		CurrentPrice:  lot.CurrentPrice,
+		CurrentWinner: lot.CurrentWinner,
 		Status:        lot.Status,
-		EndTimeUnix:   lot.End_time_unix, // Уже int64
+		EndTimeUnix:   lot.End_time_unix,
 	}
 }

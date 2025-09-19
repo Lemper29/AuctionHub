@@ -2,11 +2,11 @@
 // source: auction/auction.proto
 
 /*
-Package gen is a reverse proxy.
+Package auction is a reverse proxy.
 
 It translates gRPC into RESTful JSON APIs.
 */
-package gen
+package auction
 
 import (
 	"context"
@@ -187,7 +187,7 @@ func RegisterAuctionServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/CreateLot", runtime.WithHTTPPathPattern("/v1/lots"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/CreateLot", runtime.WithHTTPPathPattern("/api/v1/lots"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -207,7 +207,7 @@ func RegisterAuctionServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/GetLot", runtime.WithHTTPPathPattern("/v1/lots/{lot_id}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/GetLot", runtime.WithHTTPPathPattern("/api/v1/lots/{lot_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -227,7 +227,7 @@ func RegisterAuctionServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/PlaceBid", runtime.WithHTTPPathPattern("/v1/lots/{lot_id}/bids"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/auction.AuctionService/PlaceBid", runtime.WithHTTPPathPattern("/api/v1/lots/{lot_id}/bids"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -292,7 +292,7 @@ func RegisterAuctionServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/CreateLot", runtime.WithHTTPPathPattern("/v1/lots"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/CreateLot", runtime.WithHTTPPathPattern("/api/v1/lots"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -309,7 +309,7 @@ func RegisterAuctionServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/GetLot", runtime.WithHTTPPathPattern("/v1/lots/{lot_id}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/GetLot", runtime.WithHTTPPathPattern("/api/v1/lots/{lot_id}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -326,7 +326,7 @@ func RegisterAuctionServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/PlaceBid", runtime.WithHTTPPathPattern("/v1/lots/{lot_id}/bids"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/PlaceBid", runtime.WithHTTPPathPattern("/api/v1/lots/{lot_id}/bids"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -343,7 +343,7 @@ func RegisterAuctionServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/SubscribeToLot", runtime.WithHTTPPathPattern("/v1/lots/{lot_id}/subscribe"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/auction.AuctionService/SubscribeToLot", runtime.WithHTTPPathPattern("/api/v1/lots/{lot_id}/subscribe"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -360,10 +360,10 @@ func RegisterAuctionServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 }
 
 var (
-	pattern_AuctionService_CreateLot_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "lots"}, ""))
-	pattern_AuctionService_GetLot_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1", "lots", "lot_id"}, ""))
-	pattern_AuctionService_PlaceBid_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "lots", "lot_id", "bids"}, ""))
-	pattern_AuctionService_SubscribeToLot_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1", "lots", "lot_id", "subscribe"}, ""))
+	pattern_AuctionService_CreateLot_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"api", "v1", "lots"}, ""))
+	pattern_AuctionService_GetLot_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3}, []string{"api", "v1", "lots", "lot_id"}, ""))
+	pattern_AuctionService_PlaceBid_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "lots", "lot_id", "bids"}, ""))
+	pattern_AuctionService_SubscribeToLot_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2, 1, 0, 4, 1, 5, 3, 2, 4}, []string{"api", "v1", "lots", "lot_id", "subscribe"}, ""))
 )
 
 var (

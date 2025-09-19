@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/lots": {
+    "/api/v1/lots": {
       "post": {
         "operationId": "AuctionService_CreateLot",
         "responses": {
@@ -48,7 +48,7 @@
         ]
       }
     },
-    "/v1/lots/{lotId}": {
+    "/api/v1/lots/{lotId}": {
       "get": {
         "operationId": "AuctionService_GetLot",
         "responses": {
@@ -78,7 +78,7 @@
         ]
       }
     },
-    "/v1/lots/{lotId}/bids": {
+    "/api/v1/lots/{lotId}/bids": {
       "post": {
         "operationId": "AuctionService_PlaceBid",
         "responses": {
@@ -116,7 +116,7 @@
         ]
       }
     },
-    "/v1/lots/{lotId}/subscribe": {
+    "/api/v1/lots/{lotId}/subscribe": {
       "get": {
         "operationId": "AuctionService_SubscribeToLot",
         "responses": {

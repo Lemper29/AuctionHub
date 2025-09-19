@@ -4,7 +4,7 @@
 // 	protoc        v6.32.0
 // source: auction/auction.proto
 
-package gen
+package auction
 
 import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -27,9 +27,9 @@ type Lot struct {
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	StartPrice    float64                `protobuf:"fixed64,4,opt,name=start_price,json=startPrice,proto3" json:"start_price,omitempty"`
-	CurrentPrice  float64                `protobuf:"fixed64,5,opt,name=current_price,json=currentPrice,proto3" json:"current_price,omitempty"`
-	CurrentWinner string                 `protobuf:"bytes,6,opt,name=current_winner,json=currentWinner,proto3" json:"current_winner,omitempty"`
+	StartPrice    float64                `protobuf:"fixed64,4,opt,name=startPrice,proto3" json:"startPrice,omitempty"`
+	CurrentPrice  float64                `protobuf:"fixed64,5,opt,name=currentPrice,proto3" json:"currentPrice,omitempty"`
+	CurrentWinner string                 `protobuf:"bytes,6,opt,name=currentWinner,proto3" json:"currentWinner,omitempty"`
 	Status        string                 `protobuf:"bytes,7,opt,name=status,proto3" json:"status,omitempty"`
 	EndTimeUnix   int64                  `protobuf:"varint,8,opt,name=end_time_unix,json=endTimeUnix,proto3" json:"end_time_unix,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -127,8 +127,8 @@ type CreateLotRequest struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Name           string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	Description    string                 `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	StartPrice     float64                `protobuf:"fixed64,3,opt,name=start_price,json=startPrice,proto3" json:"start_price,omitempty"`
-	DurationMinute int64                  `protobuf:"varint,4,opt,name=duration_minute,json=durationMinute,proto3" json:"duration_minute,omitempty"`
+	StartPrice     float64                `protobuf:"fixed64,3,opt,name=startPrice,proto3" json:"startPrice,omitempty"`
+	DurationMinute int64                  `protobuf:"varint,4,opt,name=durationMinute,proto3" json:"durationMinute,omitempty"`
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -537,23 +537,25 @@ var File_auction_auction_proto protoreflect.FileDescriptor
 
 const file_auction_auction_proto_rawDesc = "" +
 	"\n" +
-	"\x15auction/auction.proto\x12\aauction\x1a\x1cgoogle/api/annotations.proto\"\xf4\x01\n" +
+	"\x15auction/auction.proto\x12\aauction\x1a\x1cgoogle/api/annotations.proto\"\xf1\x01\n" +
 	"\x03Lot\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1f\n" +
-	"\vstart_price\x18\x04 \x01(\x01R\n" +
-	"startPrice\x12#\n" +
-	"\rcurrent_price\x18\x05 \x01(\x01R\fcurrentPrice\x12%\n" +
-	"\x0ecurrent_winner\x18\x06 \x01(\tR\rcurrentWinner\x12\x16\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1e\n" +
+	"\n" +
+	"startPrice\x18\x04 \x01(\x01R\n" +
+	"startPrice\x12\"\n" +
+	"\fcurrentPrice\x18\x05 \x01(\x01R\fcurrentPrice\x12$\n" +
+	"\rcurrentWinner\x18\x06 \x01(\tR\rcurrentWinner\x12\x16\n" +
 	"\x06status\x18\a \x01(\tR\x06status\x12\"\n" +
-	"\rend_time_unix\x18\b \x01(\x03R\vendTimeUnix\"\x92\x01\n" +
+	"\rend_time_unix\x18\b \x01(\x03R\vendTimeUnix\"\x90\x01\n" +
 	"\x10CreateLotRequest\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12 \n" +
-	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1f\n" +
-	"\vstart_price\x18\x03 \x01(\x01R\n" +
-	"startPrice\x12'\n" +
-	"\x0fduration_minute\x18\x04 \x01(\x03R\x0edurationMinute\"3\n" +
+	"\vdescription\x18\x02 \x01(\tR\vdescription\x12\x1e\n" +
+	"\n" +
+	"startPrice\x18\x03 \x01(\x01R\n" +
+	"startPrice\x12&\n" +
+	"\x0edurationMinute\x18\x04 \x01(\x03R\x0edurationMinute\"3\n" +
 	"\x11CreateLotResponse\x12\x1e\n" +
 	"\x03lot\x18\x01 \x01(\v2\f.auction.LotR\x03lot\"&\n" +
 	"\rGetLotRequest\x12\x15\n" +
@@ -572,12 +574,12 @@ const file_auction_auction_proto_rawDesc = "" +
 	"\x15SubscribeToLotRequest\x12\x15\n" +
 	"\x06lot_id\x18\x01 \x01(\tR\x05lotId\"8\n" +
 	"\x16SubscribeToLotResponse\x12\x1e\n" +
-	"\x03lot\x18\x01 \x01(\v2\f.auction.LotR\x03lot2\x9d\x03\n" +
-	"\x0eAuctionService\x12W\n" +
-	"\tCreateLot\x12\x19.auction.CreateLotRequest\x1a\x1a.auction.CreateLotResponse\"\x13\x82\xd3\xe4\x93\x02\r:\x01*\"\b/v1/lots\x12T\n" +
-	"\x06GetLot\x12\x16.auction.GetLotRequest\x1a\x17.auction.GetLotResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/v1/lots/{lot_id}\x12b\n" +
-	"\bPlaceBid\x12\x18.auction.PlaceBidRequest\x1a\x19.auction.PlaceBidResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/v1/lots/{lot_id}/bids\x12x\n" +
-	"\x0eSubscribeToLot\x12\x1e.auction.SubscribeToLotRequest\x1a\x1f.auction.SubscribeToLotResponse\"#\x82\xd3\xe4\x93\x02\x1d\x12\x1b/v1/lots/{lot_id}/subscribe0\x01B\x1eZ\x1cgithub.com/auctiongithub/genb\x06proto3"
+	"\x03lot\x18\x01 \x01(\v2\f.auction.LotR\x03lot2\xad\x03\n" +
+	"\x0eAuctionService\x12[\n" +
+	"\tCreateLot\x12\x19.auction.CreateLotRequest\x1a\x1a.auction.CreateLotResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/api/v1/lots\x12X\n" +
+	"\x06GetLot\x12\x16.auction.GetLotRequest\x1a\x17.auction.GetLotResponse\"\x1d\x82\xd3\xe4\x93\x02\x17\x12\x15/api/v1/lots/{lot_id}\x12f\n" +
+	"\bPlaceBid\x12\x18.auction.PlaceBidRequest\x1a\x19.auction.PlaceBidResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/api/v1/lots/{lot_id}/bids\x12|\n" +
+	"\x0eSubscribeToLot\x12\x1e.auction.SubscribeToLotRequest\x1a\x1f.auction.SubscribeToLotResponse\"'\x82\xd3\xe4\x93\x02!\x12\x1f/api/v1/lots/{lot_id}/subscribe0\x01B&Z$github.com/auctiongithub/gen/auctionb\x06proto3"
 
 var (
 	file_auction_auction_proto_rawDescOnce sync.Once
