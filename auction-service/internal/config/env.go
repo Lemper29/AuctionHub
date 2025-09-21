@@ -9,7 +9,7 @@ import (
 
 type Config struct {
 	PublicHost             string
-	Port                   string
+	PortAuctionService     string
 	DBUser                 string
 	DBPassword             string
 	DBAddress              string
@@ -18,10 +18,6 @@ type Config struct {
 	DSN                    string
 	JWTSecret              string
 	JWTExpirationInSeconds int64
-}
-
-func (c Config) GetMigrationDSN() any {
-	panic("unimplemented")
 }
 
 var Envs = initConfig()
@@ -36,13 +32,13 @@ func initConfig() Config {
 	dbName := getEnv("DB_NAME", "postgres")
 
 	return Config{
-		PublicHost: getEnv("PUBLIC_HOST", "http://localhost"),
-		Port:       getEnv("PORT", "8080"),
-		DBUser:     dbUser,
-		DBPassword: dbPassword,
-		DBAddress:  fmt.Sprintf("%s:%s", dbHost, dbPort),
-		DBName:     dbName,
-		DBPort:     dbPort,
+		PublicHost:         getEnv("PUBLIC_HOST", "http://localhost"),
+		PortAuctionService: getEnv("PORT_AUCTION_SERVICE", "8080"),
+		DBUser:             dbUser,
+		DBPassword:         dbPassword,
+		DBAddress:          fmt.Sprintf("%s:%s", dbHost, dbPort),
+		DBName:             dbName,
+		DBPort:             dbPort,
 		DSN: fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			dbHost, dbPort, dbUser, dbPassword, dbName),
 	}
