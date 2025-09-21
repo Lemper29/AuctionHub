@@ -122,6 +122,6 @@ func convertToPbLot(lot *models.Lot) *pb.Lot {
 		CurrentPrice:  lot.CurrentPrice,
 		CurrentWinner: lot.CurrentWinner,
 		Status:        lot.Status,
-		EndTimeUnix:   lot.End_time_unix,
+		EndTimeUnix:   lot.EndTimeUnix,
 	}
 }

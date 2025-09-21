@@ -50,7 +50,7 @@ func (p *PostgresStorage) CreateLot(ctx context.Context, createLot *models.Creat
 		CurrentPrice:  createLot.StartPrice,
 		CurrentWinner: "",
 		Status:        "ACTIVE",
-		End_time_unix: endTime.Unix(),
+		EndTimeUnix:   endTime.Unix(),
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}
@@ -116,7 +116,7 @@ func (p *PostgresStorage) PlaceBid(ctx context.Context, placeBid *models.PlaceBi
 		}, nil
 	}
 
-	if time.Now().Unix() > lot.End_time_unix {
+	if time.Now().Unix() > lot.EndTimeUnix {
 		lot.Status = "COMPLETED"
 		p.db.Save(&lot)
 		return &models.PlaceBidResponse{
