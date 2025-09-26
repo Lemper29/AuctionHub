@@ -2,28 +2,28 @@ package config
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 type Config struct {
-	PublicHost             string
-	PortAuctionService     string
-	DBUser                 string
-	DBPassword             string
-	DBAddress              string
-	DBName                 string
-	DBPort                 string
-	DSN                    string
-	JWTSecret              string
-	JWTExpirationInSeconds int64
+	PublicHost         string
+	PortAuctionService string
+	DBUser             string
+	DBPassword         string
+	DBAddress          string
+	DBName             string
+	DBPort             string
+	DSN                string
+	LogLevel           slog.Level
 }
 
-var Envs = initConfig()
+var Envs = InitConfig()
 
-func initConfig() Config {
-	godotenv.Load()
+func InitConfig() *Config {
+	godotenv.Load(".env")
 
 	dbHost := getEnv("DB_HOST", "127.0.0.1")
 	dbPort := getEnv("DB_PORT", "5432")
@@ -31,7 +31,23 @@ func initConfig() Config {
 	dbPassword := getEnv("DB_PASSWORD", "0000")
 	dbName := getEnv("DB_NAME", "postgres")
 
-	return Config{
+	logLevelStr := getEnv("LOG_LEVEL", "debug")
+
+	var logLevel slog.Level
+	switch logLevelStr {
+	case "debug":
+		logLevel = slog.LevelDebug
+	case "info":
+		logLevel = slog.LevelInfo
+	case "warn":
+		logLevel = slog.LevelWarn
+	case "error":
+		logLevel = slog.LevelError
+	default:
+		logLevel = slog.LevelDebug
+	}
+
+	return &Config{
 		PublicHost:         getEnv("PUBLIC_HOST", "http://localhost"),
 		PortAuctionService: getEnv("PORT_AUCTION_SERVICE", "8080"),
 		DBUser:             dbUser,
@@ -41,6 +57,7 @@ func initConfig() Config {
 		DBPort:             dbPort,
 		DSN: fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 			dbHost, dbPort, dbUser, dbPassword, dbName),
+		LogLevel: logLevel,
 	}
 }
 
