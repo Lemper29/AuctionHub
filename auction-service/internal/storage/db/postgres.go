@@ -11,6 +11,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type PostgresStorage struct {
@@ -18,7 +19,10 @@ type PostgresStorage struct {
 }
 
 func NewPostgresDB(dsn postgres.Config) (storage.Storage, error) {
-	db, err := gorm.Open(postgres.New(dsn), &gorm.Config{})
+	db, err := gorm.Open(postgres.New(dsn), &gorm.Config{
+		Logger:      logger.Default.LogMode(logger.Info),
+		PrepareStmt: true,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
@@ -37,8 +41,6 @@ func NewPostgresDB(dsn postgres.Config) (storage.Storage, error) {
 }
 
 func (p *PostgresStorage) CreateLot(ctx context.Context, createLot *models.CreateLotRequest) (*models.Lot, error) {
-	log.Printf("CreateLot request: %+v", createLot)
-
 	id := uuid.New().String()
 	endTime := time.Now().Add(time.Duration(createLot.DurationMinute) * time.Minute)
 
@@ -50,20 +52,16 @@ func (p *PostgresStorage) CreateLot(ctx context.Context, createLot *models.Creat
 		CurrentPrice:  createLot.StartPrice,
 		CurrentWinner: "",
 		Status:        "ACTIVE",
-		End_time_unix: endTime.Unix(),
+		EndTimeUnix:   endTime.Unix(),
 		CreatedAt:     time.Now(),
 		UpdatedAt:     time.Now(),
 	}
-
-	log.Printf("Lot object before save: %+v", lot)
 
 	result := p.db.WithContext(ctx).Create(lot)
 	if result.Error != nil {
 		log.Printf("Error creating lot: %v", result.Error)
 		return nil, result.Error
 	}
-
-	log.Printf("Rows affected: %d", result.RowsAffected)
 
 	var savedLot models.Lot
 	err := p.db.WithContext(ctx).First(&savedLot, "id = ?", id).Error
@@ -72,13 +70,10 @@ func (p *PostgresStorage) CreateLot(ctx context.Context, createLot *models.Creat
 		return nil, err
 	}
 
-	log.Printf("Lot retrieved from DB: %+v", savedLot)
 	return &savedLot, nil
 }
 
 func (p *PostgresStorage) GetLot(ctx context.Context, getLot *models.GetLotRequest) (*models.GetLotResponse, error) {
-	log.Printf("GetLot request for ID: %s", getLot.Lot_id)
-
 	var lot models.Lot
 	err := p.db.WithContext(ctx).First(&lot, "id = ?", getLot.Lot_id).Error
 	if err != nil {
@@ -89,13 +84,10 @@ func (p *PostgresStorage) GetLot(ctx context.Context, getLot *models.GetLotReque
 		return nil, err
 	}
 
-	log.Printf("Retrieved lot from DB: %+v", lot)
 	return &models.GetLotResponse{Lot: lot}, nil
 }
 
 func (p *PostgresStorage) PlaceBid(ctx context.Context, placeBid *models.PlaceBidRequest) (*models.PlaceBidResponse, error) {
-	log.Printf("PlaceBid request: %+v", placeBid)
-
 	var lot models.Lot
 	err := p.db.WithContext(ctx).First(&lot, "id = ?", placeBid.Lot_id).Error
 	if err != nil {
@@ -106,8 +98,6 @@ func (p *PostgresStorage) PlaceBid(ctx context.Context, placeBid *models.PlaceBi
 		}, nil
 	}
 
-	log.Printf("Current lot state: %+v", lot)
-
 	if lot.Status != "ACTIVE" {
 		return &models.PlaceBidResponse{
 			Success:     false,
@@ -116,7 +106,7 @@ func (p *PostgresStorage) PlaceBid(ctx context.Context, placeBid *models.PlaceBi
 		}, nil
 	}
 
-	if time.Now().Unix() > lot.End_time_unix {
+	if time.Now().Unix() > lot.EndTimeUnix {
 		lot.Status = "COMPLETED"
 		p.db.Save(&lot)
 		return &models.PlaceBidResponse{
@@ -174,8 +164,6 @@ func (p *PostgresStorage) PlaceBid(ctx context.Context, placeBid *models.PlaceBi
 			Updated_lot: lot,
 		}, err
 	}
-
-	log.Printf("Updated lot after bid: %+v", updatedLot)
 
 	return &models.PlaceBidResponse{
 		Success:     true,

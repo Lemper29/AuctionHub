@@ -12,7 +12,7 @@ type Lot struct {
 	CurrentPrice  float64   `gorm:"column:current_price" json:"currentPrice"`
 	CurrentWinner string    `gorm:"column:current_winner" json:"currentWinner"`
 	Status        string    `gorm:"column:status" json:"status"`
-	End_time_unix int64     `gorm:"column:end_time_unix" json:"end_time_unix"`
+	EndTimeUnix   int64     `gorm:"column:end_time_unix" json:"endTimeUnix"`
 	CreatedAt     time.Time `gorm:"column:created_at;autoCreateTime" json:"createdAt"`
 	UpdatedAt     time.Time `gorm:"column:updated_at;autoUpdateTime" json:"updatedAt"`
 }
